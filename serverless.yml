@@ -1,0 +1,29 @@
+
+
+service: hello-world
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: python3.8
+  region: us-west-2
+
+# you can add statements to the Lambda function's IAM Role here
+  iam:
+    role:
+      statements:
+        - Effect: "Allow"
+          Action:
+            - "ssm:*"
+          Resource: "*"
+
+
+# you can define service wide environment variables here
+  environment:
+    variable1: ${self:custom.supersecret}
+    secrets: ${ssm:/secret}
+custom: 
+  supersecret: ${ssm:/secret}
+functions:
+  hello:
+    handler: handler.hello
